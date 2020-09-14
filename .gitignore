@@ -1,0 +1,43 @@
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### IntelliJ IDEA ###
+.idea
+*.jar
+**/*.jar
+src/main/resources/configuration.properties
+**/*.avi
+*.java.orig
+*.class
+*.iml
+*/.vagrant/*
+/target/
+*.log
+.settings/
+
+/src/main/resources/configuration.properties
+/target/**
+
+### Eclipse ###
+.classpath
+.project
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/

@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    volumes:
+    - /var/run/docker.sock/var/lib/postgresql/data
+    ports:
+      - '5439:5432/tcp'
+    deploy:
+      replicas: 1
+    networks:
+      - deimer-network
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dna
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "3"
+  zookeeper-server:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - deimer-network
+  kafka-server:
+    image: wurstmeister/kafka:latest
+    ports:
+      - target: 9094
+        published: 9094
+        protocol: tcp
+        mode: host
+    environment:
+      HOSTNAME_COMMAND: "docker info | grep ^Name: | cut -d' ' -f 2"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-server:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://_{HOSTNAME_COMMAND}:9094
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9094
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_CREATE_TOPICS: dna_event:1:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - deimer-network
+networks:
+  deimer-network:
+    external:
+      name: deimer-network
+volumes:
+  postgres:

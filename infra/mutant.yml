@@ -1,0 +1,84 @@
+version: '3.7'
+services:
+  consolidator:
+    image: 'deiru87/consolidator:1.0.0'
+    depends_on:
+      - kafka
+      - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 600M
+      replicas: 1
+    networks:
+      - deimer-network
+    environment:
+      - kafka.bootstrap-servers=kafka-server:9094
+      - database.host=postgres
+      - database.port=5432
+      - database.service=dna
+      - database.username=postgres
+      - database.password=postgres
+      - kafka.events.topic=dna_event
+      - group.id=dna-consumer
+      - kafka.client.id=bb-mapping
+      - kafka.client.id=dna_consolidator
+      - kafka.auto.commit.interval=1000
+      - kafka.session.timeout=40000
+      - heartbeat.config.ms=3000
+      - kafka.auto.offset.reset=latest
+      - kafka.amount.consumers=3
+      - server.port=8080
+      - Xmx512M
+      - Xms512M
+      - logging.level.org.springframework=DEBUG
+      - logging.level.com.cyxtera=DEBUG
+      - APP_LOG_LEVEL=DEBUG
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 1m
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100M"
+        max-file: "3"
+  seeker-service:
+    image: 'deiru87/seeker-service:1.0.0'
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+       - target: 8080
+         published: 8087
+         protocol: tcp
+         mode: ingress
+    deploy:
+      resources:
+        limits:
+          memory: 600M
+      replicas: 1
+    networks:
+      - deimer-network
+    environment:
+      - kafka.bootstrap-servers=kafka-server:9094
+      - topic.consolidator=dna_event
+      - server.port=8080
+      - database.host=postgres
+      - database.port=5432
+      - database.service=dna
+      - database.username=postgres
+      - database.password=postgres
+      - regex.pattern.word.dna=([a-zA-Z])\1\1\1
+      - regex.letters.wrong=(A|C|T|G)+
+      - Xmx512M
+      - Xms512M
+      - logging.level.org.springframework=DEBUG
+      - logging.level.com.cyxtera=DEBUG
+      - APP_LOG_LEVEL=DEBUG
+networks:
+  deimer-network:
+    external:
+      name: deimer-network
