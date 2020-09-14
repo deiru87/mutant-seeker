@@ -79,18 +79,19 @@ deiru87 correspond with a user in docker hub. by last push the images
 
 you should prepare all for deploy the Api. So you should configure a swarm cluster (Yeah I know that swarm is made for production environment. But is my approach ;) ). Remember is necessary have docker installed and configured in your machine.  
 
-#### Create network
-
-type on console:
-```sh
-        docker network create -d overlay --attachable deimer-network
-```
 
 #### initialize docker swarm  - convert current node in manager
 
 type:
 ```sh
         docker swarm init
+```
+
+#### Create network
+
+type on console:
+```sh
+        docker network create -d overlay --attachable deimer-network
 ```
 
 #### Create Stack infra
