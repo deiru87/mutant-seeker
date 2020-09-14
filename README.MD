@@ -136,7 +136,7 @@ That was the last part. we should have the complete Api-Rest Mutant Running.
 
 For this project was elaborated a project to execute automatic test, please go to the link
 https://github.com/deiru87/mutant-automation-test.git.
-that project was made with java and cucumber and correspond with a little sample of automatic tst for our rest API mutant.
+that project was made with java and cucumber and correspond with a little sample of automatic test for our rest API mutant.
 
 
 ## Services Documentation
@@ -163,7 +163,7 @@ Method: POST
 Header: Content-type:application/json
 
 curl --request POST \
-  --url http://localhost:8087/v2/mutant \
+  --url http://localhost:8087/v1/mutant \
   --header 'content-type: application/json' \
   --data '{
 	"dna" :  
