@@ -28,7 +28,7 @@ services:
   kafka-server:
     image: wurstmeister/kafka:latest
     ports:
-      - target: 9094
+      - target: 9092
         published: 9094
         protocol: tcp
         mode: host
